@@ -1,0 +1,176 @@
+requirements:
+  - title: Travel Itinerary
+    description: Core flight itinerary details
+    questions:
+      - id: origin_city
+        question: What is your departure city or airport?
+        response_guidelines:
+          acceptance_criteria:
+            - Must be a valid city name or IATA airport code
+            - Must not be empty
+          followup_questions:
+            - condition: invalid_city_or_airport
+              question: Please provide a valid city name or airport code (e.g., NYC, DEL).
+
+      - id: destination_city
+        question: What is your destination city or airport?
+        response_guidelines:
+          acceptance_criteria:
+            - Must be a valid city name or IATA airport code
+            - Must be different from origin_city
+          followup_questions:
+            - condition: same_as_origin
+              question: Destination cannot be the same as departure. Please confirm a different destination.
+
+      - id: trip_type
+        question: Is this a one-way or round-trip journey?
+        response_guidelines:
+          acceptance_criteria:
+            - Must be one of: one-way, round-trip
+          followup_questions:
+            - condition: round-trip
+              question: Please provide your return date.
+
+      - id: departure_date
+        question: What is your departure date?
+        response_guidelines:
+          acceptance_criteria:
+            - Must be a valid date
+            - Must be today or a future date
+          followup_questions:
+            - condition: past_date
+              question: Departure date cannot be in the past. Please provide a valid date.
+
+      - id: return_date
+        question: What is your return date?
+        response_guidelines:
+          acceptance_criteria:
+            - Required only if trip_type is round-trip
+            - Must be after departure_date
+          followup_questions:
+            - condition: return_before_departure
+              question: Return date must be after the departure date. Please re-enter.
+
+  - title: Passenger Details
+    description: Information about travelers
+    questions:
+      - id: number_of_passengers
+        question: How many passengers are traveling?
+        response_guidelines:
+          acceptance_criteria:
+            - Must be a positive integer
+            - Maximum allowed is 9
+          followup_questions:
+            - condition: greater_than_9
+              question: For group bookings over 9 passengers, special handling is required. Would you like assistance?
+
+      - id: passenger_breakdown
+        question: Please specify the number of adults, children, and infants.
+        response_guidelines:
+          acceptance_criteria:
+            - At least one adult is required
+            - Total count must equal number_of_passengers
+          followup_questions:
+            - condition: no_adult
+              question: At least one adult must be included. Please update passenger details.
+
+      - id: passenger_details
+        question: Provide traveler details (full name, date of birth, gender) for each passenger.
+        response_guidelines:
+          acceptance_criteria:
+            - Names must match government-issued ID
+            - Date of birth must align with passenger type (adult/child/infant)
+          followup_questions:
+            - condition: name_mismatch
+              question: Please ensure the passenger name matches the government-issued ID exactly.
+
+  - title: Travel Preferences
+    description: Seating, class, and comfort preferences
+    questions:
+      - id: travel_class
+        question: Which travel class do you prefer?
+        response_guidelines:
+          acceptance_criteria:
+            - Must be one of: economy, premium economy, business, first
+          followup_questions:
+            - condition: unavailable_class
+              question: The selected class is unavailable. Would you like to choose another class?
+
+      - id: seat_preference
+        question: Do you have a seat preference?
+        response_guidelines:
+          acceptance_criteria:
+            - Must be one of: aisle, window, middle, no preference
+          followup_questions: []
+
+      - id: meal_preference
+        question: Do you have any meal preferences?
+        response_guidelines:
+          acceptance_criteria:
+            - Must be a recognized airline meal option
+          followup_questions:
+            - condition: special_meal_selected
+              question: Please confirm any dietary restrictions or allergies.
+
+  - title: Baggage Requirements
+    description: Checked-in and cabin baggage needs
+    questions:
+      - id: checked_baggage
+        question: Do you require checked-in baggage?
+        response_guidelines:
+          acceptance_criteria:
+            - Must be yes or no
+          followup_questions:
+            - condition: yes
+              question: How many checked bags are required per passenger?
+
+      - id: excess_baggage
+        question: Do you expect excess baggage beyond airline allowance?
+        response_guidelines:
+          acceptance_criteria:
+            - Must be yes or no
+          followup_questions:
+            - condition: yes
+              question: Please specify approximate total baggage weight.
+
+  - title: Contact & Notification Preferences
+    description: Communication details for booking updates
+    questions:
+      - id: contact_email
+        question: Which email address should receive booking confirmations?
+        response_guidelines:
+          acceptance_criteria:
+            - Must be a valid email format
+          followup_questions:
+            - condition: invalid_email
+              question: Please provide a valid email address.
+
+      - id: contact_phone
+        question: Which phone number should receive flight updates?
+        response_guidelines:
+          acceptance_criteria:
+            - Must be a valid phone number with country code
+          followup_questions:
+            - condition: invalid_phone
+              question: Please provide a valid phone number with country code.
+
+  - title: Payment & Confirmation
+    description: Final confirmation before booking
+    questions:
+      - id: payment_method
+        question: What payment method would you like to use?
+        response_guidelines:
+          acceptance_criteria:
+            - Must be one of: credit card, debit card, UPI, net banking, wallet
+          followup_questions:
+            - condition: unsupported_method
+              question: The selected payment method is unavailable. Please choose another option.
+
+      - id: booking_confirmation
+        question: Do you confirm all details and wish to proceed with booking?
+        response_guidelines:
+          acceptance_criteria:
+            - Must be explicitly confirmed as yes
+          followup_questions:
+            - condition: not_confirmed
+              question: Please confirm to proceed or request changes.

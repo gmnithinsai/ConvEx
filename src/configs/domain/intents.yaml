@@ -1,0 +1,7 @@
+intent_detection:
+  fallback: other_intent
+  intents:
+    - flight_booking
+    - hotel_booking
+    - transaction_status
+   

@@ -1,0 +1,159 @@
+## Task Execution
+
+You are now performing a validation and extraction task using:
+- The system-level static validation guidelines
+- The dynamically provided requirements_info
+- The conversation history
+- The latest customer input
+
+---
+
+### Conversation History
+{% for message in conversation_history -%}
+**{{ message.role | capitalize }}**: {{ message.content }}
+{% endfor %}
+
+---
+### Step 1: Identify Active Question
+
+{% set active_question_id = "initial_question" %}
+{% set is_initial_question = true %}
+
+{% set raw_req_output = context.session.state.get("requirements_next_output") %}
+
+{# If it's a string → parse JSON #}
+{% if raw_req_output is string %}
+    {% set parsed_req_output = raw_req_output | from_json %}
+{% else %}
+    {% set parsed_req_output = raw_req_output %}
+{% endif %}
+
+{% if parsed_req_output
+      and parsed_req_output.get("next_question_id") %}
+
+    {% set active_question_id = parsed_req_output.get("next_question_id") %}
+    {% set is_initial_question = false %}
+
+{% endif %}
+
+DEBUG → FINAL active_question_id: {{ active_question_id }}
+DEBUG → FINAL is_initial_question: {{ is_initial_question }}
+
+---
+
+### Step 2: Locate Matching Question in requirements_info (Only if not initial)
+{% if not is_initial_question %}
+
+  {% set ns = namespace(matched_question=None) %}
+
+  {% for requirement in requirements_info %}
+    {% for q in requirement.questions %}
+      {% if q.id == active_question_id %}
+        {% set ns.matched_question = q %}
+      {% endif %}
+    {% endfor %}
+  {% endfor %}
+
+{% set matched_question = ns.matched_question %}
+
+
+{% endif %}
+
+
+---
+
+### Step 3: Extract Validation Rules
+
+{% if is_initial_question %}
+
+Active Question:
+Initial service inquiry question.
+
+Current Input:
+Customer Message is available in `customer_message`.
+
+Validation Rules:
+- No acceptance criteria.
+- Automatically mark status as COMPLETE.
+- Extract the full customer_message as value.
+
+{% else %}
+
+  {% if matched_question %}
+
+Active Question:
+{{ matched_question.question }}
+
+Current Input:
+Customer Message is available in `customer_message`.
+
+Acceptance Criteria:
+{% for rule in matched_question.response_guidelines.acceptance_criteria %}
+- {{ rule }}
+{% endfor %}
+
+Follow-up Questions:
+{% if matched_question.response_guidelines.followup_questions %}
+  {% for f in matched_question.response_guidelines.followup_questions %}
+- Condition: {{ f.condition }}
+  Question: {{ f.question }}
+  {% endfor %}
+{% else %}
+- None
+{% endif %}
+
+  {% else %}
+No matching question found for id: {{ active_question_id }}
+  {% endif %}
+
+{% endif %}
+
+---
+
+### Execution Rules
+
+{% if is_initial_question %}
+
+- Set question_id to "initial_question".
+- Set value to the full customer_message.
+- Set overall_status to "COMPLETE".
+- Set explanation to null.
+
+{% else %}
+
+- Validate ONLY against the acceptance criteria of the matched question.
+- Do NOT infer or fabricate missing values.
+- If ALL acceptance criteria are satisfied → set overall_status to "COMPLETE".
+- If ANY acceptance criterion fails or response is ambiguous → set overall_status to "MISSING_VARIABLES".
+
+- If overall_status is "MISSING_VARIABLES":
+  - Use the relevant follow-up question(s).
+  - Generate a clear, polite, and context-aware reframed question.
+  - Guide the user toward satisfying the acceptance criteria.
+  - Avoid repeating exact wording if previously misunderstood.
+  - Provide a brief explanation of what is missing.
+
+- If overall_status is "COMPLETE":
+  - Do NOT generate a follow-up question.
+  - explanation should be null.
+
+{% endif %}
+
+---
+
+### Output Requirements
+
+- Return only valid JSON.
+- Do not include explanations outside JSON.
+- Ensure JSON structure strictly matches the required format.
+
+### Output Format
+
+{
+  "extracted_data": {
+    "question_id": "{{ active_question_id }}",
+    "value": "response extracted from customer input or null if missing",
+    "overall_status": "COMPLETE or MISSING_VARIABLES",
+    "explanation": "A brief note on completeness, especially if MISSING_VARIABLES"
+  }
+}

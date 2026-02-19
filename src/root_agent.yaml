@@ -1,0 +1,6 @@
+name: conversation_pipeline_agent
+model: gemini-2.5-flash
+agent_class: SequentialAgent
+instruction: You are the root agent that coordinates other agents.
+sub_agents: [intent_detection_agent, information_extraction_agent, requirement_next_agent]
+tools: []

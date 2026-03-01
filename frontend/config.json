@@ -1,0 +1,8 @@
+{
+  "BACKEND_URL": "http://localhost:8000",
+  "DEFAULT_INTENT": "Flight_Booking",
+  "INITIAL_QUESTION": "What service are you looking for today?",
+  "API_TIMEOUT_MS": 10000,
+  "AUTO_LOOP_DELAY_MS": 600,
+  "DEBUG": true
+}

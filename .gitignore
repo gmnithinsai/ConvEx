@@ -5,7 +5,8 @@ build/
 dist/
 wheels/
 *.egg-info
-
+*.txt
+*.ipynb
 # Virtual environments
 .venv
 
@@ -23,3 +24,4 @@ wheels/
 .pytest_cache/
 .coverage
 .adk
+

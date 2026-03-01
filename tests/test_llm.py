@@ -7,6 +7,7 @@ from common.llm import get_llm
 @pytest.mark.asyncio
 async def test_llm_generate_async():
     llm = get_llm()
+    print("---------------------------------------")
 
     request = LlmRequest(
         messages=[
@@ -24,3 +25,13 @@ async def test_llm_generate_async():
 
     # Production-grade assertion
     assert len(full_output) > 10
+
+
+
+import asyncio
+
+def run_async_tests():
+    asyncio.run(test_llm_generate_async())
+
+if __name__ == "__main__":
+    run_async_tests()

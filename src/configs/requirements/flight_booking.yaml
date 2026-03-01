@@ -13,7 +13,7 @@ requirements:
               question: Please provide a valid city name or airport code (e.g., NYC, DEL).
 
       - id: destination_city
-        question: What is your destination city or airport?
+        question: What city or airport are you flying to?
         response_guidelines:
           acceptance_criteria:
             - Must be a valid city name or IATA airport code
@@ -22,34 +22,34 @@ requirements:
             - condition: same_as_origin
               question: Destination cannot be the same as departure. Please confirm a different destination.
 
-      - id: trip_type
-        question: Is this a one-way or round-trip journey?
-        response_guidelines:
-          acceptance_criteria:
-            - Must be one of: one-way, round-trip
-          followup_questions:
-            - condition: round-trip
-              question: Please provide your return date.
+      # - id: trip_type
+      #   question: Is this a one-way or round-trip journey?
+      #   response_guidelines:
+      #     acceptance_criteria:
+      #       - Must be one of: one-way, round-trip
+      #     followup_questions:
+      #       - condition: round-trip
+      #         question: Please provide your return date.
 
-      - id: departure_date
-        question: What is your departure date?
-        response_guidelines:
-          acceptance_criteria:
-            - Must be a valid date
-            - Must be today or a future date
-          followup_questions:
-            - condition: past_date
-              question: Departure date cannot be in the past. Please provide a valid date.
+      # - id: departure_date
+      #   question: What is your departure date?
+      #   response_guidelines:
+      #     acceptance_criteria:
+      #       - Must be a valid date
+      #       - Must be today or a future date
+      #     followup_questions:
+      #       - condition: past_date
+      #         question: Departure date cannot be in the past. Please provide a valid date.
 
-      - id: return_date
-        question: What is your return date?
-        response_guidelines:
-          acceptance_criteria:
-            - Required only if trip_type is round-trip
-            - Must be after departure_date
-          followup_questions:
-            - condition: return_before_departure
-              question: Return date must be after the departure date. Please re-enter.
+      # - id: return_date
+      #   question: What is your return date?
+      #   response_guidelines:
+      #     acceptance_criteria:
+      #       - Required only if trip_type is round-trip
+      #       - Must be after departure_date
+      #     followup_questions:
+      #       - condition: return_before_departure
+      #         question: Return date must be after the departure date. Please re-enter.
 
   # - title: Passenger Details
   #   description: Information about travelers

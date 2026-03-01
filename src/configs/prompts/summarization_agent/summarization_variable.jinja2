@@ -1,0 +1,15 @@
+### Conversation History
+[
+{%- for turn in conversation_history %}
+  {
+    "role": "{{ turn.role }}",
+    "content": "{{ turn.content | replace('"', '\\"') }}"
+  }{{ "," if not loop.last }}
+{%- endfor %}
+]
+
+### Instructions
+Create:
+1. `summary`: A concise paragraph (3-6 sentences max).
+2. `key_points`: A short list of material facts, decisions, and constraints.
+3. `open_items`: Missing info, unresolved questions, or actionable next steps.

@@ -1,10 +1,20 @@
+import asyncio
+
 import dotenv
+from langfuse import get_client
+from openinference.instrumentation.google_adk import GoogleADKInstrumentor
 
 from agents.root_agent.agent import conversation_pipeline_agent
 from src.api.services.dialogue_service import AgentService
 
 dotenv.load_dotenv()
-import asyncio
+GoogleADKInstrumentor().instrument()
+
+langfuse = get_client()
+if langfuse.auth_check():
+    print("Langfuse client is authenticated and ready!")
+else:
+    print("Authentication failed. Please check your credentials and host.")
 
 root_agent = conversation_pipeline_agent
 

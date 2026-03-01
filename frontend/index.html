@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dialogue Agent Chat</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="layout">
+      <main class="chat-panel">
+        <header class="chat-header">
+          <h1>Dialogue Agent</h1>
+          <p>Chat with selected persona context.</p>
+        </header>
+
+        <section id="messages" class="messages"></section>
+
+        <form id="chat-form" class="chat-form">
+          <input
+            id="message-input"
+            type="text"
+            placeholder="Click Run to generate persona reply…"
+            autocomplete="off"
+            readonly
+          />
+          <button type="submit">Send</button>
+        </form>
+      </main>
+
+      <aside class="sidebar">
+        <div class="card">
+          <label for="intent-select">Intent</label>
+          <select id="intent-select"></select>
+        </div>
+
+        <div class="card">
+          <p>Persona</p>
+          <div id="persona-list" class="persona-list"></div>
+
+          <div class="run-controls">
+            <label class="loop-label">
+              <input id="auto-loop" type="checkbox" />
+              Auto-loop
+            </label>
+            <button id="persona-submit" class="persona-submit" type="button">Run</button>
+            <button id="stop-btn" class="stop-btn" type="button" style="display:none">Stop</button>
+          </div>
+        </div>
+
+        <div class="card small">
+          <p><strong>Current Persona:</strong> <span id="active-persona">None</span></p>
+          <p><strong>Session:</strong> <span id="session-id"></span></p>
+        </div>
+      </aside>
+    </div>
+
+    <script src="app.js"></script>
+  </body>
+</html>

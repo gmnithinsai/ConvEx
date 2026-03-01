@@ -1,0 +1,207 @@
+[
+  {
+    "persona_id": "2be12a16-d24a-4348-bb17-bb9bc0155fec",
+    "primary_intent": "Flight_Booking",
+    "industry": "Travel",
+    "demographics": {
+      "name": "Oliver Brown",
+      "email": "oliver.brown7149@gmail.com",
+      "nationality": "British",
+      "gender": "Female",
+      "age_group": "51_plus",
+      "marital_status": "Divorced_or_Widowed",
+      "employment_status": "Unemployed_or_Retired",
+      "income_level": "High"
+    },
+    "identity": {
+      "education_level": "Masters"
+    },
+    "language_style": {
+      "slang_style": "Australian_Slang",
+      "politeness_level": "Neutral",
+      "verbosity": "Medium_13_to_25_words",
+      "punctuation_style": "Formal_Strict",
+      "emotional_tone": "Calm"
+    },
+    "personality_traits": {
+      "decision_style": "Risk_Averse",
+      "tech_savviness": "Beginner",
+      "trust_level": "Low_Trust",
+      "patience_level": "High"
+    },
+    "behavioral_patterns": {
+      "response_speed_expectation": "Flexible",
+      "clarification_tendency": "Asks_Many_Questions",
+      "price_sensitivity": "Premium_Seeking",
+      "error_reaction": "Expresses_Frustration"
+    },
+    "conversation_behavior": {
+      "greeting_style": "Urgent_Start",
+      "information_provided_initially": "Complete_Details"
+    }
+  },
+  {
+    "persona_id": "9a86b4b2-70e1-44b0-9b7b-cbc065af5a7c",
+    "primary_intent": "Flight_Booking",
+    "industry": "Travel",
+    "demographics": {
+      "name": "Ananya Sharma",
+      "email": "ananya.sharma4094@gmail.com",
+      "nationality": "Indian",
+      "gender": "Female",
+      "age_group": 1825,
+      "marital_status": "Single",
+      "employment_status": "Business_Owner",
+      "income_level": "Medium"
+    },
+    "identity": {
+      "education_level": "Bachelors"
+    },
+    "language_style": {
+      "slang_style": "Neutral_Global",
+      "politeness_level": "Neutral",
+      "verbosity": "Short_5_to_12_words",
+      "punctuation_style": "Minimal",
+      "emotional_tone": "Frustrated"
+    },
+    "personality_traits": {
+      "decision_style": "Impulsive",
+      "tech_savviness": "Beginner",
+      "trust_level": "Moderate_Trust",
+      "patience_level": "High"
+    },
+    "behavioral_patterns": {
+      "response_speed_expectation": "Immediate",
+      "clarification_tendency": "Asks_Many_Questions",
+      "price_sensitivity": "Balanced",
+      "error_reaction": "Expresses_Frustration"
+    },
+    "conversation_behavior": {
+      "greeting_style": "Urgent_Start",
+      "information_provided_initially": "Partial_Details"
+    }
+  },
+  {
+    "persona_id": "b7818557-c83c-424e-867b-8a85d933f8ec",
+    "primary_intent": "Flight_Booking",
+    "industry": "Travel",
+    "demographics": {
+      "name": "Ethan Thomas",
+      "email": "ethan.thomas3226@gmail.com",
+      "nationality": "Canadian",
+      "gender": "Male",
+      "age_group": "51_plus",
+      "marital_status": "Divorced_or_Widowed",
+      "employment_status": "Business_Owner",
+      "income_level": "High"
+    },
+    "identity": {
+      "education_level": "Bachelors"
+    },
+    "language_style": {
+      "slang_style": "Neutral_Global",
+      "politeness_level": "Very_Polite",
+      "verbosity": "Medium_13_to_25_words",
+      "punctuation_style": "Minimal",
+      "emotional_tone": "Friendly"
+    },
+    "personality_traits": {
+      "decision_style": "Analytical",
+      "tech_savviness": "Beginner",
+      "trust_level": "High_Trust",
+      "patience_level": "Low"
+    },
+    "behavioral_patterns": {
+      "response_speed_expectation": "Moderate",
+      "clarification_tendency": "Minimal_Clarification",
+      "price_sensitivity": "Premium_Seeking",
+      "error_reaction": "Expresses_Frustration"
+    },
+    "conversation_behavior": {
+      "greeting_style": "No_Greeting_Direct_Start",
+      "information_provided_initially": "Minimal_Details"
+    }
+  },
+  {
+    "persona_id": "81f87330-a293-4a3a-a3a7-e21feb5dd4de",
+    "primary_intent": "Flight_Booking",
+    "industry": "Travel",
+    "demographics": {
+      "name": "Mia Martin",
+      "email": "mia.martin3861@gmail.com",
+      "nationality": "Australian",
+      "gender": "Female",
+      "age_group": 2635,
+      "marital_status": "Divorced_or_Widowed",
+      "employment_status": "Salaried",
+      "income_level": "High"
+    },
+    "identity": {
+      "education_level": "Masters"
+    },
+    "language_style": {
+      "slang_style": "Australian_Slang",
+      "politeness_level": "Direct_or_Blunt",
+      "verbosity": "Medium_13_to_25_words",
+      "punctuation_style": "Formal_Strict",
+      "emotional_tone": "Frustrated"
+    },
+    "personality_traits": {
+      "decision_style": "Analytical",
+      "tech_savviness": "Beginner",
+      "trust_level": "High_Trust",
+      "patience_level": "Medium"
+    },
+    "behavioral_patterns": {
+      "response_speed_expectation": "Immediate",
+      "clarification_tendency": "Frequently_Confused",
+      "price_sensitivity": "Highly_Price_Sensitive",
+      "error_reaction": "Expresses_Frustration"
+    },
+    "conversation_behavior": {
+      "greeting_style": "Formal_Greeting",
+      "information_provided_initially": "Partial_Details"
+    }
+  },
+  {
+    "persona_id": "4b97dfdd-3bfa-497e-a2a2-6415552fb020",
+    "primary_intent": "Flight_Booking",
+    "industry": "Travel",
+    "demographics": {
+      "name": "Lucas Thomas",
+      "email": "lucas.thomas6585@gmail.com",
+      "nationality": "Canadian",
+      "gender": "Female",
+      "age_group": 3650,
+      "marital_status": "Single",
+      "employment_status": "Business_Owner",
+      "income_level": "Medium"
+    },
+    "identity": {
+      "education_level": "Bachelors"
+    },
+    "language_style": {
+      "slang_style": "Indian_English",
+      "politeness_level": "Very_Polite",
+      "verbosity": "Long_26_to_60_words",
+      "punctuation_style": "Formal_Strict",
+      "emotional_tone": "Frustrated"
+    },
+    "personality_traits": {
+      "decision_style": "Analytical",
+      "tech_savviness": "Intermediate",
+      "trust_level": "Low_Trust",
+      "patience_level": "High"
+    },
+    "behavioral_patterns": {
+      "response_speed_expectation": "Moderate",
+      "clarification_tendency": "Asks_Many_Questions",
+      "price_sensitivity": "Balanced",
+      "error_reaction": "Expresses_Frustration"
+    },
+    "conversation_behavior": {
+      "greeting_style": "No_Greeting_Direct_Start",
+      "information_provided_initially": "Minimal_Details"
+    }
+  }
+]

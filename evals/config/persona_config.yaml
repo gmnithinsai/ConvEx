@@ -1,0 +1,249 @@
+persona_config:
+
+  version: "2.0"
+  description: >
+    Balanced master persona configuration for generating multiple customer personas.
+    All attributes separate values and probability distributions for controlled sampling.
+
+  generation_rules:
+    minimum_personas: 10
+    language: "English"
+    enforce_balanced_dataset: true
+    one_primary_intent_per_persona: true
+
+  segments:
+
+    demographics:
+
+      nationality:
+        values:
+          - American
+          - Indian
+          - British
+          - Australian
+          - Canadian
+        distribution: [0.20, 0.20, 0.20, 0.20, 0.20]
+
+      gender:
+        values:
+          - Male
+          - Female
+        distribution: [0.50, 0.50]
+
+      age_group:
+        values:
+          - 18_25
+          - 26_35
+          - 36_50
+          - 51_plus
+        distribution: [0.25, 0.25, 0.25, 0.25]
+
+      marital_status:
+        values:
+          - Single
+          - Married
+          - Divorced_or_Widowed
+        distribution: [0.33, 0.34, 0.33]
+
+      employment_status:
+        values:
+          - Student
+          - Salaried
+          - Self_Employed
+          - Business_Owner
+          - Unemployed_or_Retired
+        distribution: [0.20, 0.20, 0.20, 0.20, 0.20]
+
+      income_level:
+        values:
+          - Low
+          - Medium
+          - High
+        distribution: [0.33, 0.34, 0.33]
+
+
+    identity:
+
+      education_level:
+        values:
+          - High_School
+          - Bachelors
+          - Masters
+          - Doctorate_or_Professional
+        distribution: [0.25, 0.25, 0.25, 0.25]
+
+      name_generation:
+        values:
+          - nationality_based_random
+        distribution: [1.0]
+
+      email_generation:
+        values:
+          - firstname.lastname.randomnumber@emailprovider.com
+        distribution: [1.0]
+
+
+    language_style:
+
+      slang_style:
+        values:
+          - American_Casual
+          - Indian_English
+          - British_Colloquial
+          - Australian_Slang
+          - Neutral_Global
+        distribution: [0.20, 0.20, 0.20, 0.20, 0.20]
+
+      politeness_level:
+        values:
+          - Very_Polite
+          - Neutral
+          - Direct_or_Blunt
+        distribution: [0.33, 0.34, 0.33]
+
+      verbosity:
+        values:
+          - Short_5_to_12_words
+          - Medium_13_to_25_words
+          - Long_26_to_60_words
+        distribution: [0.33, 0.34, 0.33]
+
+      punctuation_style:
+        values:
+          - Minimal
+          - Normal
+          - Excessive_Exclamation
+          - Formal_Strict
+        distribution: [0.25, 0.25, 0.25, 0.25]
+
+      emotional_tone:
+        values:
+          - Calm
+          - Impatient
+          - Friendly
+          - Frustrated
+        distribution: [0.25, 0.25, 0.25, 0.25]
+
+
+    personality_traits:
+
+      decision_style:
+        values:
+          - Analytical
+          - Emotional
+          - Impulsive
+          - Risk_Averse
+        distribution: [0.25, 0.25, 0.25, 0.25]
+
+      tech_savviness:
+        values:
+          - Beginner
+          - Intermediate
+          - Advanced
+        distribution: [0.33, 0.34, 0.33]
+
+      trust_level:
+        values:
+          - Low_Trust
+          - Moderate_Trust
+          - High_Trust
+        distribution: [0.33, 0.34, 0.33]
+
+      patience_level:
+        values:
+          - Low
+          - Medium
+          - High
+        distribution: [0.33, 0.34, 0.33]
+
+
+    behavioral_patterns:
+
+      response_speed_expectation:
+        values:
+          - Immediate
+          - Moderate
+          - Flexible
+        distribution: [0.33, 0.34, 0.33]
+
+      clarification_tendency:
+        values:
+          - Asks_Many_Questions
+          - Minimal_Clarification
+          - Frequently_Confused
+        distribution: [0.33, 0.34, 0.33]
+
+      price_sensitivity:
+        values:
+          - Highly_Price_Sensitive
+          - Balanced
+          - Premium_Seeking
+        distribution: [0.33, 0.34, 0.33]
+
+      error_reaction:
+        values:
+          - Calm_Request_Fix
+          - Expresses_Frustration
+          - Threatens_To_Leave
+        distribution: [0.33, 0.34, 0.33]
+
+
+    conversation_behavior:
+
+      greeting_style:
+        values:
+          - No_Greeting_Direct_Start
+          - Casual_Hi
+          - Formal_Greeting
+          - Urgent_Start
+        distribution: [0.25, 0.25, 0.25, 0.25]
+
+      information_provided_initially:
+        values:
+          - Minimal_Details
+          - Partial_Details
+          - Complete_Details
+        distribution: [0.33, 0.34, 0.33]
+
+
+    intent_distribution:
+
+      industry_segment:
+        values:
+          - Travel
+          - Banking_Finance
+          - Ecommerce
+          - Telecommunications
+        distribution: [0.25, 0.25, 0.25, 0.25]
+
+      travel_intent:
+        values:
+          - flight_booking
+          - hotel_booking
+        distribution: [0.50, 0.50]
+
+      banking_finance_intent:
+        values:
+          - loan_requirement
+          - new_bank_account_creation
+        distribution: [0.50, 0.50]
+
+      ecommerce_intent:
+        values:
+          - product_return_request
+          - order_tracking
+        distribution: [0.50, 0.50]
+
+      telecommunications_intent:
+        values:
+          - new_sim_activation
+          - plan_change_request
+        distribution: [0.50, 0.50]
+
+
+  constraints:
+    enforce_gender_balance: true
+    enforce_age_balance: true
+    enforce_industry_balance: true
+    slang_matches_nationality: true
+    language_always_english: true

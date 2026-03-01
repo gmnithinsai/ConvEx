@@ -124,9 +124,9 @@ No matching question found for id: {{ active_question_id }}
 - Validate ONLY against the acceptance criteria of the matched question.
 - Do NOT infer or fabricate missing values.
 - If ALL acceptance criteria are satisfied → set overall_status to "COMPLETE".
-- If ANY acceptance criterion fails or response is ambiguous → set overall_status to "MISSING_VARIABLES".
+- If ANY acceptance criterion fails or response is ambiguous → set overall_status to "MISSING".
 
-- If overall_status is "MISSING_VARIABLES":
+- If overall_status is "MISSING":
   - Use the relevant follow-up question(s).
   - Generate a clear, polite, and context-aware reframed question.
   - Guide the user toward satisfying the acceptance criteria.
@@ -153,7 +153,7 @@ No matching question found for id: {{ active_question_id }}
   "extracted_data": {
     "question_id": "{{ active_question_id }}",
     "value": "response extracted from customer input or null if missing",
-    "overall_status": "COMPLETE or MISSING_VARIABLES",
-    "explanation": "A brief note on completeness, especially if MISSING_VARIABLES"
+    "overall_status": "COMPLETE or MISSING",
+    "explanation": "A brief note on completeness, especially if MISSING"
   }
 }

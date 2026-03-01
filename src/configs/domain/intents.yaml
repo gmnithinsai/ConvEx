@@ -3,5 +3,9 @@ intent_detection:
   intents:
     - flight_booking
     - hotel_booking
-    - transaction_status
-   
+    - loan_requirement
+    - new_bank_account_creation
+    - product_return_request
+    - order_tracking
+    - new_sim_activation
+    - plan_change_request

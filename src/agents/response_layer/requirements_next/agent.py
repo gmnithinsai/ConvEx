@@ -9,6 +9,7 @@ from src.agents.response_layer.requirements_next.schema import (
     RequirementsNextOutput,
 )
 from src.common.llm import get_llm
+from src.common.requirement_updater import update_requirements_status
 
 requirement_next_agent = LlmAgent(
     model=get_llm(),
@@ -19,6 +20,7 @@ requirement_next_agent = LlmAgent(
     input_schema=RequirementsNextInput,
     output_key="requirements_next_output",
     output_schema=RequirementsNextOutput,
+    after_agent_callback=update_requirements_status,
 )
 
 

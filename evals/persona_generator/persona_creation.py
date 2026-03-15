@@ -95,10 +95,12 @@ class PersonaGenerator:
                 "gender": gender,
                 "age_group": self.sample_attribute("demographics", "age_group"),
                 "marital_status": self.sample_attribute(
-                    "demographics", "marital_status"
+                    "demographics",
+                    "marital_status",
                 ),
                 "employment_status": self.sample_attribute(
-                    "demographics", "employment_status"
+                    "demographics",
+                    "employment_status",
                 ),
                 "income_level": self.sample_attribute("demographics", "income_level"),
             },
@@ -108,50 +110,63 @@ class PersonaGenerator:
             "language_style": {
                 "slang_style": self.sample_attribute("language_style", "slang_style"),
                 "politeness_level": self.sample_attribute(
-                    "language_style", "politeness_level"
+                    "language_style",
+                    "politeness_level",
                 ),
                 "verbosity": self.sample_attribute("language_style", "verbosity"),
                 "punctuation_style": self.sample_attribute(
-                    "language_style", "punctuation_style"
+                    "language_style",
+                    "punctuation_style",
                 ),
                 "emotional_tone": self.sample_attribute(
-                    "language_style", "emotional_tone"
+                    "language_style",
+                    "emotional_tone",
                 ),
             },
             "personality_traits": {
                 "decision_style": self.sample_attribute(
-                    "personality_traits", "decision_style"
+                    "personality_traits",
+                    "decision_style",
                 ),
                 "tech_savviness": self.sample_attribute(
-                    "personality_traits", "tech_savviness"
+                    "personality_traits",
+                    "tech_savviness",
                 ),
                 "trust_level": self.sample_attribute(
-                    "personality_traits", "trust_level"
+                    "personality_traits",
+                    "trust_level",
                 ),
                 "patience_level": self.sample_attribute(
-                    "personality_traits", "patience_level"
+                    "personality_traits",
+                    "patience_level",
                 ),
             },
             "behavioral_patterns": {
                 "response_speed_expectation": self.sample_attribute(
-                    "behavioral_patterns", "response_speed_expectation"
+                    "behavioral_patterns",
+                    "response_speed_expectation",
                 ),
                 "clarification_tendency": self.sample_attribute(
-                    "behavioral_patterns", "clarification_tendency"
+                    "behavioral_patterns",
+                    "clarification_tendency",
                 ),
                 "price_sensitivity": self.sample_attribute(
-                    "behavioral_patterns", "price_sensitivity"
+                    "behavioral_patterns",
+                    "price_sensitivity",
                 ),
                 "error_reaction": self.sample_attribute(
-                    "behavioral_patterns", "error_reaction"
+                    "behavioral_patterns",
+                    "error_reaction",
                 ),
             },
             "conversation_behavior": {
                 "greeting_style": self.sample_attribute(
-                    "conversation_behavior", "greeting_style"
+                    "conversation_behavior",
+                    "greeting_style",
                 ),
                 "information_provided_initially": self.sample_attribute(
-                    "conversation_behavior", "information_provided_initially"
+                    "conversation_behavior",
+                    "information_provided_initially",
                 ),
             },
         }
@@ -185,5 +200,5 @@ if __name__ == "__main__":
         json.dump(personas, f, indent=2)
 
     print(
-        f"Generated {len(personas)} personas for intent '{intent_name}' in {output_file}"
+        f"Generated {len(personas)} personas for intent '{intent_name}' in {output_file}",
     )

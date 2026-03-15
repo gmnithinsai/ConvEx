@@ -5,12 +5,16 @@ from src.agents.response_layer.information_extraction.agent import (
     information_extraction_agent,
 )
 from src.agents.response_layer.requirements_next.agent import requirement_next_agent
+from src.agents.response_layer.requirements_status_updater.agent import (
+    requirement_status_updater_agent,
+)
 
 conversation_pipeline_agent = SequentialAgent(
     name="conversation_pipeline_agent",
     sub_agents=[
         intent_detection_agent,
         information_extraction_agent,
+        requirement_status_updater_agent,
         requirement_next_agent,
     ],
     description="Executes a sequence of intent detection, information extraction, and requirements next agents.",

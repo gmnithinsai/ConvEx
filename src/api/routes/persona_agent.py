@@ -63,7 +63,9 @@ def _render_persona_prompt(persona: dict[str, Any], user_question: str) -> str:
 @router.post("/run", response_model=PersonaAgentRunResponse)
 async def run_persona_agent(payload: PersonaAgentRunRequest) -> PersonaAgentRunResponse:
     persona = _load_persona(payload.intent_name, payload.persona_id)
-    prompt_text = _render_persona_prompt(persona=persona, user_question=payload.user_question)
+    prompt_text = _render_persona_prompt(
+        persona=persona, user_question=payload.user_question
+    )
 
     try:
         result = await agent_service.run_agent(

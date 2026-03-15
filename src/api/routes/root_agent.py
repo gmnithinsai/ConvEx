@@ -1,12 +1,12 @@
 from __future__ import annotations
 
-from typing import Any
-from pathlib import Path
 import json
+from pathlib import Path
+from typing import Any
 
+import yaml
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel, Field
-import yaml
 
 from src.agents.root_agent.agent import conversation_pipeline_agent
 from src.api.services.dialogue_service import AgentExecutionError, AgentService
@@ -51,7 +51,9 @@ class PersonaSummary(BaseModel):
 
 
 class PersonasResponse(BaseModel):
-    personas: list[PersonaSummary] = Field(description="Available personas for selected intent.")
+    personas: list[PersonaSummary] = Field(
+        description="Available personas for selected intent."
+    )
 
 
 @router.post("/run", response_model=RootAgentRunResponse)
@@ -104,7 +106,8 @@ async def get_persona_intents() -> IntentsResponse:
         return IntentsResponse(intents=deduped_intents)
     except Exception as exc:
         raise HTTPException(
-            status_code=500, detail=f"Failed to load persona intents: {exc}"
+            status_code=500,
+            detail=f"Failed to load persona intents: {exc}",
         ) from exc
 
 
@@ -117,7 +120,9 @@ async def get_intents() -> IntentsResponse:
             intents = []
         return IntentsResponse(intents=[str(item) for item in intents])
     except Exception as exc:
-        raise HTTPException(status_code=500, detail=f"Failed to load intents: {exc}") from exc
+        raise HTTPException(
+            status_code=500, detail=f"Failed to load intents: {exc}"
+        ) from exc
 
 
 @router.get("/personas", response_model=PersonasResponse)
@@ -144,16 +149,20 @@ async def get_personas(intent_name: str) -> PersonasResponse:
                 demographics = {}
             personas.append(
                 PersonaSummary(
-                    persona_id=str(item.get("persona_id") or f"{normalized_intent}_{index}"),
+                    persona_id=str(
+                        item.get("persona_id") or f"{normalized_intent}_{index}"
+                    ),
                     intent_name=str(item.get("primary_intent") or intent_name),
                     name=str(demographics.get("name") or "Unknown"),
                     email=str(demographics.get("email") or ""),
                     gender=str(demographics.get("gender") or "Unknown"),
                     nationality=str(demographics.get("nationality") or "Unknown"),
-                )
+                ),
             )
         return PersonasResponse(personas=personas)
     except HTTPException:
         raise
     except Exception as exc:
-        raise HTTPException(status_code=500, detail=f"Failed to load personas: {exc}") from exc
+        raise HTTPException(
+            status_code=500, detail=f"Failed to load personas: {exc}"
+        ) from exc

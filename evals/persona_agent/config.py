@@ -39,7 +39,7 @@ def _get_cached_template() -> Template:
 
     mtime = PERSONA_PROMPT_PATH.stat().st_mtime
     with _CACHE_LOCK:
-        if _TEMPLATE_CACHE is None or _TEMPLATE_MTIME != mtime:
+        if _TEMPLATE_CACHE is None or mtime != _TEMPLATE_MTIME:
             _TEMPLATE_CACHE = _load_template()
             _TEMPLATE_MTIME = mtime
     return _TEMPLATE_CACHE
@@ -89,4 +89,3 @@ def build_persona_instruction(context) -> str:
     if not isinstance(prompt_text, str) or not prompt_text.strip():
         raise ValueError("prompt_text missing for persona_agent input.")
     return prompt_text
-

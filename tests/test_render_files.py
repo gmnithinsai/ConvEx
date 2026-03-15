@@ -19,7 +19,7 @@ def test_render_prompt_with_real_yaml():
             "conversation_history": [
                 {"role": "user", "content": "I want to book a flight."},
                 {"role": "agent", "content": "Sure, where are you flying from?"},
-            ]
+            ],
         },
     )
 

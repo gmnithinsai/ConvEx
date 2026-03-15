@@ -6,7 +6,7 @@ requirements:
         question: What is your departure city or airport?
         response_guidelines:
           acceptance_criteria:
-            - Must be a valid city name or IATA airport code
+            - Must be a valid city name
             - Must not be empty
           followup_questions:
             - condition: invalid_city_or_airport
@@ -16,7 +16,7 @@ requirements:
         question: What city or airport are you flying to?
         response_guidelines:
           acceptance_criteria:
-            - Must be a valid city name or IATA airport code
+            - Must be a valid city name
             - Must be different from origin_city
           followup_questions:
             - condition: same_as_origin

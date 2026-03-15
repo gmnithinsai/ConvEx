@@ -28,7 +28,7 @@ class ConversationHistoryService:
                     {
                         "role": "user",
                         "content": payload,
-                    }
+                    },
                 )
 
             # ✅ If it's JSON and contains next_question → add only that
@@ -37,7 +37,7 @@ class ConversationHistoryService:
                     {
                         "role": "assistant",
                         "content": payload["next_question"],
-                    }
+                    },
                 )
 
         return history

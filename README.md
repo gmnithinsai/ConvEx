@@ -1,4 +1,4 @@
-# dialogue-agent
+# CONVersation EXpert Agent
 
 Conversational multi-agent app (Google ADK + FastAPI) for collecting structured requirements across domains (intents), with a small static frontend and optional persona/evals support.
 

@@ -1,6 +1,5 @@
 import pytest
 from fastapi import HTTPException
-
 from src.api.routes.root_agent_personas import get_personas
 
 

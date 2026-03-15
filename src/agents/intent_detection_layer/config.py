@@ -4,8 +4,8 @@ from src.common.conversation_history import ConversationHistoryService
 from src.configs.domain.domain_loader import (
     render_yaml,
 )
-from src.configs.prompts.prompt_loader import render_prompt
 from src.configs.domain.schema import IntentDetectionConfig
+from src.configs.prompts.prompt_loader import render_prompt
 
 
 # ----------------------------------------
@@ -18,9 +18,9 @@ def build_intent_detection_static():
         parts=[
             types.Part(
                 text=render_prompt(
-                    "intent_detection_layer/intent_detection_static.jinja2"
+                    "intent_detection_layer/intent_detection_static.jinja2",
                 ),
-            )
+            ),
         ],
     )
 
@@ -30,7 +30,6 @@ def build_intent_detection_static():
 # ----------------------------------------
 def build_intent_detection_instruction(context):
     """Returns rendered variable instruction prompt."""
-
     # Build conversation history
     conversation_history = ConversationHistoryService(context).build_history()
 

@@ -77,7 +77,7 @@ def render_prompt(
         if match:
             missing_var = match.group(1)
             raise ValueError(
-                f"Missing template variable: '{missing_var}' in template '{template_name}'"
+                f"Missing template variable: '{missing_var}' in template '{template_name}'",
             ) from exc
         raise
     return result

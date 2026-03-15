@@ -9,7 +9,6 @@ from src.agents.summarization_agent.schema import (
 )
 from src.common.llm import get_llm
 
-
 summarization_agent = LlmAgent(
     model=get_llm(),
     name="summarization_agent",

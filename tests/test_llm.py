@@ -27,11 +27,12 @@ async def test_llm_generate_async():
     assert len(full_output) > 10
 
 
-
 import asyncio
+
 
 def run_async_tests():
     asyncio.run(test_llm_generate_async())
+
 
 if __name__ == "__main__":
     run_async_tests()

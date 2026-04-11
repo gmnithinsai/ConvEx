@@ -68,12 +68,12 @@ class CustomLiteLlm(LiteLlm):
 def get_llm():
     google_api_key = os.getenv("GOOGLE_API_KEY")
     ollama_model = os.getenv("OLLAMA_MODEL")
-    # ollama_base_url = os.getenv("LLM_API_BASE")
+    ollama_base_url = os.getenv("OLLAMA_API_BASE") or os.getenv("LLM_API_BASE")
 
     # ✅ OLLAMA_MODEL present: use LiteLlm with ollama_chat/gemma3:latest
     # ✅ OLLAMA_MODEL present: use LiteLlm with model and base_url from env
     if ollama_model:
-        return CustomLiteLlm(model=ollama_model)
+        return CustomLiteLlm(model=ollama_model, base_url=ollama_base_url)
     # if ollama_model:
     #     return LiteLlm(model=ollama_model, base_url=ollama_base_url)
 

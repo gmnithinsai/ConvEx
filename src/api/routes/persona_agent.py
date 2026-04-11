@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import os
 from pathlib import Path
 from typing import Any
 
@@ -9,12 +10,17 @@ from pydantic import BaseModel, Field
 
 from evals.persona_agent.agent import persona_agent
 from evals.persona_agent.config import render_persona_prompt
-from src.api.services.dialogue_service import AgentExecutionError, AgentService
+from src.api.services.dialogue_service import (
+    AgentExecutionError,
+    AgentService,
+    AgentTimeoutError,
+)
 
 router = APIRouter(prefix="/persona-agent", tags=["persona-agent"])
 agent_service = AgentService(app_name="persona_agent_app")
 PROJECT_ROOT = Path(__file__).resolve().parents[3]
 PERSONAS_DIR = PROJECT_ROOT / "evals" / "config" / "personas"
+AGENT_RUN_TIMEOUT_S = float(os.getenv("AGENT_RUN_TIMEOUT_S", "0") or 0) or None
 
 
 class PersonaAgentRunRequest(BaseModel):
@@ -73,7 +79,10 @@ async def run_persona_agent(payload: PersonaAgentRunRequest) -> PersonaAgentRunR
             user_id=payload.user_id,
             session_id=payload.session_id,
             input_payload={"prompt_text": prompt_text},
+            timeout_s=AGENT_RUN_TIMEOUT_S,
         )
+    except AgentTimeoutError as exc:
+        raise HTTPException(status_code=504, detail=str(exc)) from exc
     except AgentExecutionError as exc:
         raise HTTPException(status_code=500, detail=str(exc)) from exc
 

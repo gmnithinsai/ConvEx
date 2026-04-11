@@ -58,7 +58,7 @@ class PersonaSummary(BaseModel):
 
 class PersonasResponse(BaseModel):
     personas: list[PersonaSummary] = Field(
-        description="Available personas for selected intent."
+        description="Available personas for selected intent.",
     )
 
 
@@ -130,7 +130,8 @@ async def get_intents() -> IntentsResponse:
         return IntentsResponse(intents=[str(item) for item in intents])
     except Exception as exc:
         raise HTTPException(
-            status_code=500, detail=f"Failed to load intents: {exc}"
+            status_code=500,
+            detail=f"Failed to load intents: {exc}",
         ) from exc
 
 
@@ -140,7 +141,7 @@ async def get_personas(intent_name: str) -> PersonasResponse:
         normalized_intent = intent_name.strip().lower().replace(" ", "_")
         file_path = PERSONAS_DIR / f"persona_{normalized_intent}.json"
         if not file_path.exists():
-            raise HTTPException(
+            raise HTTPException(  # noqa: TRY301
                 status_code=404,
                 detail=f"Persona file not found for intent '{intent_name}'.",
             )
@@ -159,7 +160,7 @@ async def get_personas(intent_name: str) -> PersonasResponse:
             personas.append(
                 PersonaSummary(
                     persona_id=str(
-                        item.get("persona_id") or f"{normalized_intent}_{index}"
+                        item.get("persona_id") or f"{normalized_intent}_{index}",
                     ),
                     intent_name=str(item.get("primary_intent") or intent_name),
                     name=str(demographics.get("name") or "Unknown"),
@@ -173,5 +174,6 @@ async def get_personas(intent_name: str) -> PersonasResponse:
         raise
     except Exception as exc:
         raise HTTPException(
-            status_code=500, detail=f"Failed to load personas: {exc}"
+            status_code=500,
+            detail=f"Failed to load personas: {exc}",
         ) from exc

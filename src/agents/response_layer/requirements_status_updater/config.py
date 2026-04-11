@@ -56,9 +56,9 @@ def requirements_status_updater_instruction(context):
         if isinstance(raw_requirements_status_updater_output, str):
             try:
                 raw_requirements_status_updater_output = json.loads(
-                    raw_requirements_status_updater_output
+                    raw_requirements_status_updater_output,
                 )
-            except Exception:
+            except Exception:  # noqa: BLE001
                 raw_requirements_status_updater_output = {}
 
         if not isinstance(raw_requirements_status_updater_output, dict):
@@ -70,7 +70,7 @@ def requirements_status_updater_instruction(context):
         if isinstance(raw_status, str):
             try:
                 raw_status = json.loads(raw_status)
-            except Exception:
+            except Exception:  # noqa: BLE001
                 raw_status = {}
 
         if raw_status is None or not isinstance(raw_status, dict):

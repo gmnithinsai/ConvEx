@@ -9,6 +9,7 @@ const state = {
   personas: [],
   selectedPersona: null,
   isRunning: false,
+  runAbortController: null,
   config: {}
 };
 
@@ -35,16 +36,50 @@ function log(...args) {
   if (state.config.DEBUG) console.log(...args);
 }
 
+function errorMessage(err) {
+  if (!err) return "Unknown error";
+  if (typeof err === "string") return err;
+  if (typeof err === "number" || typeof err === "boolean") return String(err);
+  if (err instanceof Error) return err.message || err.name || "Error";
+  if (typeof err === "object") {
+    if (typeof err.detail === "string") return err.detail;
+    if (typeof err.message === "string") return err.message;
+    try {
+      return JSON.stringify(err);
+    } catch {
+      return "Unknown error";
+    }
+  }
+  return "Unknown error";
+}
+
 // ─────────────────────────────────────────────────────────────
 // CONFIG LOADER
 // ─────────────────────────────────────────────────────────────
 
 async function loadConfig() {
-  const res = await fetch("/config.json");
-  if (!res.ok) throw new Error("Failed to load config.json");
+  const candidates = ["config.json", "/config.json", "/frontend/config.json"];
+  let lastErr = null;
 
-  state.config = await res.json();
-  state.currentQuestion = state.config.INITIAL_QUESTION;
+  for (const url of candidates) {
+    try {
+      const res = await fetch(url);
+      if (!res.ok) {
+        lastErr = new Error(`HTTP ${res.status} when loading ${url}`);
+        continue;
+      }
+
+      state.config = await res.json();
+      state.currentQuestion = state.config.INITIAL_QUESTION;
+      return;
+    } catch (err) {
+      lastErr = err;
+    }
+  }
+
+  throw new Error(
+    `Failed to load config.json (tried: ${candidates.join(", ")}): ${lastErr?.message || "unknown error"}`
+  );
 }
 
 // ─────────────────────────────────────────────────────────────
@@ -52,22 +87,40 @@ async function loadConfig() {
 // ─────────────────────────────────────────────────────────────
 
 async function apiRequest(endpoint, options = {}) {
+  const { timeoutMs, ...fetchOptions } = options;
+
+  const resolvedTimeoutMs = Number(timeoutMs ?? state.config.API_TIMEOUT_MS);
+  const effectiveTimeoutMs =
+    Number.isFinite(resolvedTimeoutMs) && resolvedTimeoutMs > 0
+      ? resolvedTimeoutMs
+      : 60000;
+
   const controller = new AbortController();
+  if (fetchOptions.signal) {
+    if (fetchOptions.signal.aborted) {
+      controller.abort(fetchOptions.signal.reason);
+    } else {
+      fetchOptions.signal.addEventListener(
+        "abort",
+        () => controller.abort(fetchOptions.signal.reason),
+        { once: true }
+      );
+    }
+  }
+
   const timeout = setTimeout(
-    () => controller.abort(),
-    state.config.API_TIMEOUT_MS
+    () => controller.abort("timeout"),
+    effectiveTimeoutMs
   );
 
   try {
     const res = await fetch(
       `${state.config.BACKEND_URL}${endpoint}`,
       {
-        ...options,
+        ...fetchOptions,
         signal: controller.signal
       }
     );
-
-    clearTimeout(timeout);
 
     if (!res.ok) {
       const err = await res.json().catch(() => ({}));
@@ -77,9 +130,16 @@ async function apiRequest(endpoint, options = {}) {
     return await res.json();
   } catch (err) {
     if (err.name === "AbortError") {
-      throw new Error("Request timed out");
+      if (controller.signal.reason === "timeout") {
+        throw new Error(
+          `Request timed out (${effectiveTimeoutMs}ms): ${endpoint}`
+        );
+      }
+      throw new Error(`Request cancelled: ${endpoint}`);
     }
     throw err;
+  } finally {
+    clearTimeout(timeout);
   }
 }
 
@@ -201,11 +261,20 @@ async function runSingleTurn() {
 
   const selectedIntent =
     intentSelectEl.value || state.config.DEFAULT_INTENT;
+  const runTimeoutMs =
+    Number(state.config.RUN_TIMEOUT_MS) ||
+    Number(state.config.API_TIMEOUT_MS) ||
+    60000;
+
+  state.runAbortController?.abort("new_run");
+  state.runAbortController = new AbortController();
 
   appendTypingIndicator();
 
   try {
     const personaData = await apiRequest("/persona-agent/run", {
+      timeoutMs: runTimeoutMs,
+      signal: state.runAbortController.signal,
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -227,6 +296,8 @@ async function runSingleTurn() {
     appendTypingIndicator();
 
     const rootData = await apiRequest("/root-agent/run", {
+      timeoutMs: runTimeoutMs,
+      signal: state.runAbortController.signal,
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -251,8 +322,10 @@ async function runSingleTurn() {
     return true;
   } catch (err) {
     removeTypingIndicator();
-    appendMessage("agent", `⚠️ ${err.message}`);
+    appendMessage("agent", `⚠️ ${errorMessage(err)}`);
     return false;
+  } finally {
+    state.runAbortController = null;
   }
 }
 
@@ -283,6 +356,7 @@ personaSubmitEl.addEventListener("click", async () => {
 });
 
 stopBtn?.addEventListener("click", () => {
+  state.runAbortController?.abort("user_stop");
   setRunning(false);
 });
 
@@ -295,9 +369,14 @@ intentSelectEl.addEventListener("change", async () => {
 // ─────────────────────────────────────────────────────────────
 
 async function startApp() {
-  await loadConfig();
-  await loadIntentOptions();
-  appendMessage("agent", state.currentQuestion);
+  try {
+    await loadConfig();
+    await loadIntentOptions();
+    appendMessage("agent", state.currentQuestion);
+  } catch (err) {
+    appendMessage("agent", `⚠️ ${errorMessage(err)}`);
+    personaSubmitEl.disabled = true;
+  }
 }
 
 startApp();

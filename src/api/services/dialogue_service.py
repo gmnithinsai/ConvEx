@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import asyncio
 import json
 import logging
 from typing import Any
@@ -15,6 +16,10 @@ logging.basicConfig(level=logging.INFO)
 
 class AgentExecutionError(Exception):
     """Raised when agent execution fails."""
+
+
+class AgentTimeoutError(AgentExecutionError):
+    """Raised when agent execution exceeds a time limit."""
 
 
 class AgentService:
@@ -76,6 +81,7 @@ class AgentService:
         user_id: str,
         session_id: str,
         input_payload: dict[str, Any],
+        timeout_s: float | None = None,
     ) -> Any:
         await self.create_session(user_id, session_id)
         runner = self.get_runner(agent)
@@ -85,8 +91,8 @@ class AgentService:
             parts=[types.Part(text=json.dumps(input_payload))],
         )
 
-        final_text: str | None = None
-        try:
+        async def _consume_events() -> str | None:
+            final_text: str | None = None
             async for event in runner.run_async(
                 user_id=user_id,
                 session_id=session_id,
@@ -94,6 +100,19 @@ class AgentService:
             ):
                 if event.is_final_response() and event.content and event.content.parts:
                     final_text = event.content.parts[0].text
+            return final_text
+
+        try:
+            if timeout_s is not None and timeout_s > 0:
+                async with asyncio.timeout(timeout_s):
+                    final_text = await _consume_events()
+            else:
+                final_text = await _consume_events()
+        except TimeoutError as exc:
+            logger.exception("Agent execution timed out after %ss", timeout_s)
+            raise AgentTimeoutError(
+                f"Agent timed out after {timeout_s}s"
+            ) from exc
         except Exception as exc:
             logger.exception("Agent execution failed")
             raise AgentExecutionError(str(exc)) from exc

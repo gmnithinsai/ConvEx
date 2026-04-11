@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import os
 from pathlib import Path
 from typing import Any
 
@@ -9,7 +10,11 @@ from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel, Field
 
 from src.agents.root_agent.agent import conversation_pipeline_agent
-from src.api.services.dialogue_service import AgentExecutionError, AgentService
+from src.api.services.dialogue_service import (
+    AgentExecutionError,
+    AgentService,
+    AgentTimeoutError,
+)
 
 router = APIRouter(prefix="/root-agent", tags=["root-agent"])
 agent_service = AgentService(app_name="agent_comparison_app")
@@ -17,6 +22,7 @@ PROJECT_ROOT = Path(__file__).resolve().parents[3]
 INTENTS_PATH = PROJECT_ROOT / "src" / "configs" / "domain" / "intents.yaml"
 PERSONA_CONFIG_PATH = PROJECT_ROOT / "evals" / "config" / "persona_config.yaml"
 PERSONAS_DIR = PROJECT_ROOT / "evals" / "config" / "personas"
+AGENT_RUN_TIMEOUT_S = float(os.getenv("AGENT_RUN_TIMEOUT_S", "0") or 0) or None
 
 
 class RootAgentRunRequest(BaseModel):
@@ -67,7 +73,10 @@ async def run_root_agent(payload: RootAgentRunRequest) -> RootAgentRunResponse:
                 "customer_message": payload.customer_message,
                 "current_question": payload.current_question,
             },
+            timeout_s=AGENT_RUN_TIMEOUT_S,
         )
+    except AgentTimeoutError as exc:
+        raise HTTPException(status_code=504, detail=str(exc)) from exc
     except AgentExecutionError as exc:
         raise HTTPException(status_code=500, detail=str(exc)) from exc
 

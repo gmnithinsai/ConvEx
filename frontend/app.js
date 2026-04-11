@@ -9,7 +9,9 @@ const state = {
   personas: [],
   selectedPersona: null,
   isRunning: false,
+  isSending: false,
   runAbortController: null,
+  sendAbortController: null,
   config: {}
 };
 
@@ -20,6 +22,7 @@ const state = {
 const messagesEl      = document.getElementById("messages");
 const formEl          = document.getElementById("chat-form");
 const messageInputEl  = document.getElementById("message-input");
+const sendBtn         = formEl?.querySelector("button[type='submit']");
 const intentSelectEl  = document.getElementById("intent-select");
 const personaListEl   = document.getElementById("persona-list");
 const personaSubmitEl = document.getElementById("persona-submit");
@@ -178,6 +181,26 @@ function setRunning(running) {
   if (stopBtn) stopBtn.style.display = running ? "inline-block" : "none";
 }
 
+function setSending(sending) {
+  state.isSending = sending;
+  if (sendBtn) sendBtn.disabled = sending;
+  if (messageInputEl) messageInputEl.disabled = sending;
+  // Prevent overlapping runs while a send is in-flight, but keep the Run label.
+  if (personaSubmitEl) personaSubmitEl.disabled = sending || state.isRunning;
+  // Stop is only for the persona "Run" loop, not for chat sends.
+  if (stopBtn) stopBtn.style.display = state.isRunning ? "inline-block" : "none";
+}
+
+function buildCustomerMessage(text, intentName) {
+  const parts = [];
+  if (state.selectedPersona?.persona_id) {
+    parts.push(`[persona:${state.selectedPersona.persona_id}]`);
+  }
+  if (intentName) parts.push(`[intent:${intentName}]`);
+  parts.push(text);
+  return parts.join(" ");
+}
+
 // ─────────────────────────────────────────────────────────────
 // PERSONA RENDERING
 // ─────────────────────────────────────────────────────────────
@@ -333,8 +356,65 @@ async function runSingleTurn() {
 // EVENTS
 // ─────────────────────────────────────────────────────────────
 
+formEl?.addEventListener("submit", async (e) => {
+  e.preventDefault();
+  if (state.isRunning || state.isSending) return;
+
+  const userText = (messageInputEl?.value || "").trim();
+  if (!userText) return;
+
+  messageInputEl.value = "";
+  appendMessage("user", userText);
+
+  const selectedIntent =
+    intentSelectEl.value || state.config.DEFAULT_INTENT;
+  const runTimeoutMs =
+    Number(state.config.RUN_TIMEOUT_MS) ||
+    Number(state.config.API_TIMEOUT_MS) ||
+    60000;
+
+  state.sendAbortController?.abort("new_send");
+  state.sendAbortController = new AbortController();
+
+  setSending(true);
+  appendTypingIndicator();
+
+  try {
+    const rootData = await apiRequest("/root-agent/run", {
+      timeoutMs: runTimeoutMs,
+      signal: state.sendAbortController.signal,
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        user_id: state.userId,
+        session_id: state.sessionId,
+        customer_message: buildCustomerMessage(userText, selectedIntent),
+        current_question: state.currentQuestion
+      })
+    });
+
+    removeTypingIndicator();
+
+    const result = rootData.result || {};
+    const nextQuestion =
+      typeof result === "object" && result.next_question
+        ? result.next_question
+        : result;
+
+    state.currentQuestion = nextQuestion;
+    appendMessage("agent", nextQuestion);
+  } catch (err) {
+    removeTypingIndicator();
+    appendMessage("agent", `⚠️ ${errorMessage(err)}`);
+  } finally {
+    state.sendAbortController = null;
+    setSending(false);
+    messageInputEl?.focus();
+  }
+});
+
 personaSubmitEl.addEventListener("click", async () => {
-  if (state.isRunning) return;
+  if (state.isRunning || state.isSending) return;
 
   const autoLoop = autoLoopEl?.checked ?? false;
 
@@ -373,9 +453,12 @@ async function startApp() {
     await loadConfig();
     await loadIntentOptions();
     appendMessage("agent", state.currentQuestion);
+    messageInputEl?.focus();
   } catch (err) {
     appendMessage("agent", `⚠️ ${errorMessage(err)}`);
     personaSubmitEl.disabled = true;
+    if (sendBtn) sendBtn.disabled = true;
+    if (messageInputEl) messageInputEl.disabled = true;
   }
 }
 

@@ -5,7 +5,7 @@ import json
 import logging
 from typing import Any
 
-from google.adk.agents import LlmAgent
+from google.adk.agents import LlmAgent  # noqa: TC002
 from google.adk.runners import Runner
 from google.adk.sessions import InMemorySessionService
 from google.genai import types
@@ -46,8 +46,8 @@ class AgentService:
                 session_id=session_id,
             )
             logger.info("Session created: %s", session_id)
-        except Exception:
-            # Session may already exist – safe to ignore
+        except Exception:  # noqa: BLE001
+            # Session may already exist – safe to ignore  # noqa: RUF003
             logger.debug("Session already exists: %s", session_id)
 
     async def get_session_state(
@@ -110,8 +110,9 @@ class AgentService:
                 final_text = await _consume_events()
         except TimeoutError as exc:
             logger.exception("Agent execution timed out after %ss", timeout_s)
+            msg = f"Agent timed out after {timeout_s}s"
             raise AgentTimeoutError(
-                f"Agent timed out after {timeout_s}s"
+                msg,
             ) from exc
         except Exception as exc:
             logger.exception("Agent execution failed")
